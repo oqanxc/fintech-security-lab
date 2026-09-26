@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload Bandit SARIF Artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bandit-sarif
           path: bandit-results.sarif
@@ -132,7 +132,7 @@ jobs:
           category: 'trivy-k8s'
       
       - name: Upload K8s SARIF Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always() && hashFiles('trivy-k8s-results.sarif') != ''
         with:
           name: trivy-k8s-sarif
@@ -179,7 +179,7 @@ jobs:
           
           
       - name: Upload SBOM Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cyclonedx-sbom
           path: sbom.json
@@ -221,7 +221,7 @@ jobs:
       
       - name: Upload Trivy SARIF Artifact
         if: always() && hashFiles('trivy-results.sarif') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-sarif
           path: trivy-results.sarif
@@ -395,7 +395,7 @@ jobs:
         run: python scripts/ai_triage.py
 
       - name: Upload AI Triage Summary Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ai-triage-summary
           path: ai_triage_summary.md 
