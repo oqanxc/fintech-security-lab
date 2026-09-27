@@ -39,7 +39,7 @@ def search():
         conn.close()
         return jsonify([{"id": r[0], "username": r[1]} for r in rows])
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Internal Server Error"}), 500
     
     """query = "SELECT id, username FROM users WHERE username = '" + username + "'"
 
