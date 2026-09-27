@@ -360,7 +360,7 @@ jobs:
   ai_triage:
     name: AI-Assisted Triage
     runs-on: ubuntu-latest
-    needs: [sast_scan, sca_scan]
+    needs: [sast_scan, sca_scan, dast_scan]
     if: always()
     permissions:
       contents: read
@@ -387,6 +387,12 @@ jobs:
         continue-on-error: true
         with:
           name: trivy-sarif
+
+      - name : Download Zap Multi-App SARIF
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: zap_out/zap-multi-app-reports
 
       - name: Run AI Triage
         env:
