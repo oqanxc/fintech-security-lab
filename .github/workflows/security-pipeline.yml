@@ -1,4 +1,4 @@
-name: DevSecOps Security Pipeline
+name: Fintech Security Lab Pipeline
 
 on:
   push:
@@ -155,25 +155,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-
       - name: Build Docker Image
         run: |
-          docker build --no-cache -t devsecops-demo-app:latest .
+          docker build --no-cache -t fintech-security-lab:latest .
 
       - name: Check installed Python packages
         run: |
-          docker run --rm devsecops-demo-app:latest python -c "import msgpack, setuptools; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__)"
+          docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__)"
 
       - name: Docker push to GitHub Container Registry
         run: |
-          docker tag devsecops-demo-app:latest ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest
-          docker push ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest
+          docker tag fintech-security-lab:latest ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest
+          docker push ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest
 
 
       - name: Generate SBOM
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest'
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest'
           format: 'cyclonedx'
           output: 'sbom.json'
           
@@ -187,7 +186,7 @@ jobs:
       - name: Run Trivy Vulnerability Scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'devsecops-demo-app:latest'
+          image-ref: 'fintech-security-lab:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
           scanners: 'vuln'
@@ -204,7 +203,7 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'devsecops-demo-app:latest'
+          image-ref: 'fintech-security-lab:latest'
           format: 'table'
           scanners: 'vuln'
           exit-code: '0'
@@ -241,8 +240,8 @@ jobs:
 
       - name: Build & Run Flask App
         run: |
-          docker build --no-cache -t devsecops-demo-app:latest .
-          docker run -d --name test-flask-app -p 5000:5000 devsecops-demo-app:latest
+          docker build --no-cache -t fintech-security-lab:latest .
+          docker run -d --name test-flask-app -p 5000:5000 fintech-security-lab:latest
           sleep 5
    # Check if both apps are running   
       - name: Install & Run Node.js App
@@ -305,8 +304,8 @@ jobs:
       - name: Stop and Remove Container
         if: always()
         run: |
-          docker stop test-app || true
-          docker rm test-app   || true
+          docker stop test-flask-app || true
+          docker rm test-flask-app   || true
 
   sign_image:
       name: Sign Image (Cosign Keyless)
@@ -328,12 +327,12 @@ jobs:
 
         - name: Sign Image (Keyless via OIDC)
           run: |
-            cosign sign --yes ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest
+            cosign sign --yes ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest
 
         - name: Verify Keyless Signature
           run: |
-            cosign verify ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest \
-              --certificate-identity-regexp "https://github.com/${{ github.repository_owner }}/devsecops-pipeline" \
+            cosign verify ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest \
+              --certificate-identity-regexp "https://github.com/${{ github.repository_owner }}/fintech-security-lab" \
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
               
   deploy_staging:
@@ -344,7 +343,7 @@ jobs:
     steps:
       - name: Simulate staging deployment
         run: |
-          echo "Deploying ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest to STAGING..."
+          echo "Deploying ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest to STAGING..."
           echo "(No real cluster connected — this step demonstrates the promotion flow)"
 
   deploy_production:
@@ -355,7 +354,7 @@ jobs:
     steps:
       - name: Simulate production deployment
         run: |
-          echo "Deploying ghcr.io/${{ github.repository_owner }}/devsecops-demo-app:latest to PRODUCTION..."
+          echo "Deploying ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest to PRODUCTION..."
           echo "(No real cluster connected — this step demonstrates the approval gate)"
 
   ai_triage:
