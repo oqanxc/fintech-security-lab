@@ -47,7 +47,7 @@ def get_user():
             return jsonify({"id": user[0], "username": user[1]})
         return jsonify({"message": "User not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Internal Server Error Occured"}), 500
 
 if __name__ == "__main__":
     init_db()
