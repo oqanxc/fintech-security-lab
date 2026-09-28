@@ -14,7 +14,17 @@ permissions:
 
 jobs:
 
-  
+  semgrep-scan:
+    name: Semgrep SAST Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: auto
 
   sast_scan:
     name: SAST (Bandit)
