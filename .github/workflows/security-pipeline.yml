@@ -14,9 +14,13 @@ permissions:
 
 jobs:
 
-  semgrep-scan:
-    name: Semgrep SAST Scan
+  sast_Semgrep:
+    name: SAST (Semgrep)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,8 +29,17 @@ jobs:
         uses: semgrep/semgrep-action@v1
         with:
           config: auto
+          generate-sarif: true
+      
+      - name: Upload Semgrep SARIF to GitHub Security
+       uses: github/codeql-action/upload-sarif@v4
+       with:
+         sarif_file: 'semgrep.sarif'
+         category: 'semgrep-sast'
 
-  sast_scan:
+
+
+  sast_Bandit:
     name: SAST (Bandit)
     runs-on: ubuntu-latest
     steps:
@@ -62,7 +75,7 @@ jobs:
           name: bandit-sarif
           path: bandit-results.sarif
 
-  sast_codeql:
+  sast_CodeQL:
     name: SAST (CodeQL)
     runs-on: ubuntu-latest
     permissions:
