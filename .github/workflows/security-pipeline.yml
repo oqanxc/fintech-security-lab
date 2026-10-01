@@ -187,7 +187,7 @@ jobs:
       - name: Check installed Python packages
         run: |
             docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__)"
-            
+            docker run --rm fintech-security-lab:latest sh -c "find / -type f \( -name 'METADATA' -o -name 'PKG-INFO' \) 2>/dev/null | grep urllib3"
 
       - name: Docker push to GitHub Container Registry
         run: |
