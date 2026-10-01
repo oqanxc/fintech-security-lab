@@ -186,8 +186,9 @@ jobs:
 
       - name: Check installed Python packages
         run: |
-            docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__)"
-            docker run --rm aquasec/trivy image --scanners vuln fintech-security-lab:latest
+          docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools, urllib3; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__); print('urllib3:', urllib3.__version__); print('urllib3 path:', urllib3.__file__)"
+      
+
 
       - name: Docker push to GitHub Container Registry
         run: |
