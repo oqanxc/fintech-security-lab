@@ -24,8 +24,3 @@ TEMP-0000000-B05303
 # ignore untrusted registry error images on ghcr.io
 KSV-0125
 
-# CVE-2026-97687 & CVE-2026-97689: False positive / version parsing overlap 
-# where urllib3 is verified and running at >= 2.8.0 at runtime
-CVE-2026-97687
-CVE-2026-97689
-CVE-2026-97688
