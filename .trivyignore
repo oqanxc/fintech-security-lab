@@ -28,3 +28,4 @@ KSV-0125
 # where urllib3 is verified and running at >= 2.8.0 at runtime
 CVE-2026-97687
 CVE-2026-97689
+CVE-2026-97688
