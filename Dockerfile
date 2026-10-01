@@ -14,7 +14,8 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir --upgrade pip "setuptools>=78.1.1" wheel && \
     pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir --upgrade "msgpack>=1.2.1" 
+    pip install --no-cache-dir --upgrade "msgpack>=1.2.1" \
+    pip install --no-cache-dir --upgrade "urllib3>=2.0.4" 
 
 COPY . .
 
