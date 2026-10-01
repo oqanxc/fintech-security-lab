@@ -335,7 +335,7 @@ jobs:
   sign_image:
       name: Sign Image (Cosign Keyless)
       runs-on: ubuntu-latest
-      needs: [sast_Bandit, sast_CodeQL, secret_scan, sca_scan, dast_scan, k8s_manifest_scan]
+      needs: [sast_Bandit, sast_CodeQL, secret_scan, sca_scan, dast_scan, k8s_manifest_scan, sast_Semgrep]
       permissions:
         id-token: write
         packages: write
@@ -434,7 +434,7 @@ jobs:
   notify_on_failure:
       name: Notify on Pipeline Failure
       runs-on: ubuntu-latest
-      needs: [sast_Bandit, sast_CodeQL, secret_scan, sca_scan, dast_scan, sign_image, deploy_staging, deploy_production]
+      needs: [sast_Bandit, sast_CodeQL, secret_scan, sca_scan, dast_scan, sign_image, deploy_staging, deploy_production, sast_Semgrep]
       if: failure()
       steps:
         - name: Send Failure Email
