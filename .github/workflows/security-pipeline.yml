@@ -187,8 +187,8 @@ jobs:
       - name: Check installed Python packages
         run: |
           docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools, urllib3; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__); print('urllib3:', urllib3.__version__); print('urllib3 path:', urllib3.__file__)"
-          docker run --rm fintech-security-lab:latest sh -c "grep -RIl 'Version: 2.7.0' /usr/local/lib/python3.11/site-packages 2>/dev/null"
-          docker run --rm fintech-security-lab:latest sh -c "find /usr/local/lib/python3.11/site-packages -iname '*urllib3*' -o -iname '*requests*'"
+          docker run --rm fintech-security-lab:latest python -m pip show urllib3
+          docker run --rm fintech-security-lab:latest python -c "import importlib.metadata as m; d=m.distribution('urllib3'); print(d.version); print(d._path)"
 
 
       - name: Docker push to GitHub Container Registry
