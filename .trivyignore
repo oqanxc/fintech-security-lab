@@ -25,6 +25,6 @@ TEMP-0000000-B05303
 KSV-0125
 
 # CVE-2026-97687 & CVE-2026-97689: False positive / version parsing overlap 
-# where urllib3 is verified and running at >= 2.8.0 at runtime,
+# where urllib3 is verified and running at >= 2.8.0 at runtime
 CVE-2026-97687
 CVE-2026-97689
