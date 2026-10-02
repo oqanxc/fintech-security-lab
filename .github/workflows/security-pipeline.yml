@@ -180,6 +180,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+          
       - name: Build Docker Image
         run: |
           docker build --no-cache -t fintech-security-lab:latest .
