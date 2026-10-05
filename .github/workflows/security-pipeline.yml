@@ -193,6 +193,7 @@ jobs:
           docker run --rm fintech-security-lab:latest sh -c "find / -path '*pip/_vendor*' -iname '*urllib3*' 2>/dev/null"
           docker run --rm fintech-security-lab:latest python -c "import pip._vendor.urllib3 as u; print('Vendored version:', u.__version__); print('Vendored path:', u.__file__)"
           docker run --rm fintech-security-lab:latest python -c "import pip._vendor.urllib3 as u; print(u.__dict__.get('__version__')); print(u.__file__)"
+          docker run --rm fintech-security-lab:latest sh -c "grep -RniE '__version__|version_info' /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 2>/dev/null | head -20"
 
       - name: Docker push to GitHub Container Registry
         run: |
