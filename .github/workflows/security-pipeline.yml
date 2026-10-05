@@ -187,13 +187,13 @@ jobs:
 
       - name: Check installed Python packages
         run: |
-          docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools, urllib3; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__); print('urllib3:', urllib3.__version__); print('urllib3 path:', urllib3.__file__)"
-          docker run --rm fintech-security-lab:latest sh -c "find / -iname '*urllib3*' 2>/dev/null"
-          docker run --rm fintech-security-lab:latest sh -c "find /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 -maxdepth 1"
-          docker run --rm fintech-security-lab:latest sh -c "cat /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3/_version.py 2>/dev/null || echo '_version.py not found'"
-          docker run --rm fintech-security-lab:latest sh -c "grep -RniE '__version__|version_info' /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 2>/dev/null | head -20 || echo 'no version string found'"
-          docker run --rm fintech-security-lab:latest python -c "import pip._vendor.urllib3 as u; print('Vendored version:', u.__version__); print('Vendored path:', u.__file__)" || echo "direct import failed, see above for file-based version"
-
+            docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools, urllib3; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__); print('urllib3:', urllib3.__version__); print('urllib3 path:', urllib3.__file__)"
+            docker run --rm fintech-security-lab:latest sh -c "find / -iname '*urllib3*' 2>/dev/null" || true
+            docker run --rm fintech-security-lab:latest sh -c "find /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 -maxdepth 1" || true
+            docker run --rm fintech-security-lab:latest sh -c "cat /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3/_version.py 2>/dev/null || echo '_version.py not found'"
+            docker run --rm fintech-security-lab:latest sh -c "grep -RniE '__version__|version_info' /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 2>/dev/null | head -20" || true
+            docker run --rm fintech-security-lab:latest sh -c "cat /usr/local/lib/python3.11/site-packages/pip-26.2.1.dist-info/METADATA 2>/dev/null | grep -i urllib3" || true
+            
       - name: Docker push to GitHub Container Registry
         run: |
           docker tag fintech-security-lab:latest ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest
