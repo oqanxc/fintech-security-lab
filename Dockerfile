@@ -7,7 +7,10 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install --no-install-recommends -y libpcre2-8-0 && \
     apt-get upgrade -y libpcre2-8-0 && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* 
+
+
+RUN pip install --no-cache-dir --upgrade pip
 
 
 COPY requirements.txt .
