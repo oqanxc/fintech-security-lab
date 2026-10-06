@@ -32,7 +32,6 @@ RUN rm -rf /usr/local/lib/python3.11/site-packages/pip* \
            /usr/local/bin/pip* \
            /usr/local/bin/easy_install* && \
     useradd -m -u 1000 appuser && chown -R appuser:appuser /app
-
 USER appuser
 EXPOSE 5000
 CMD ["python", "app.py"]
