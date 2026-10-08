@@ -180,19 +180,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+
       - name: Build Docker Image
         run: |
           docker build --no-cache -t fintech-security-lab:latest .
 
       - name: Check installed Python packages
         run: |
-          docker run --rm fintech-security-lab:latest python -c "import msgpack, setuptools; print('msgpack:', msgpack.__version__); print('setuptools:', setuptools.__version__)"
-
+            docker run --rm fintech-security-lab:latest python -c "import msgpack, urllib3; print('msgpack:', msgpack.__version__); print('urllib3:', urllib3.__version__); print('urllib3 path:', urllib3.__file__)"
+            docker run --rm fintech-security-lab:latest sh -c "find / -iname '*urllib3*' 2>/dev/null" || true
+            docker run --rm fintech-security-lab:latest sh -c "find /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 -maxdepth 1" || true
+            docker run --rm fintech-security-lab:latest sh -c "cat /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3/_version.py 2>/dev/null || echo '_version.py not found'"
+            docker run --rm fintech-security-lab:latest sh -c "grep -RniE '__version__|version_info' /usr/local/lib/python3.11/site-packages/pip/_vendor/urllib3 2>/dev/null | head -20" || true
+            docker run --rm fintech-security-lab:latest sh -c "cat /usr/local/lib/python3.11/site-packages/pip-26.2.1.dist-info/METADATA 2>/dev/null | grep -i urllib3" || true
+            
+            
       - name: Docker push to GitHub Container Registry
         run: |
           docker tag fintech-security-lab:latest ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest
           docker push ghcr.io/${{ github.repository_owner }}/fintech-security-lab:latest
-
 
       - name: Generate SBOM
         uses: aquasecurity/trivy-action@master
