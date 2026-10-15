@@ -1,4 +1,4 @@
-# DevSecOps Security Pipeline
+# fintech-security-lab Security Pipeline
 
 A GitHub Actions CI/CD pipeline that enforces automated security gates (SAST, SCA, DAST, and secret scanning) across a multi-language application (Python/Flask + Node.js), with supply chain security (image signing, SBOM), Kubernetes-hardened deployment manifests, and a manual approval gate before production.
 
@@ -71,6 +71,6 @@ pre-commit install
 ## Running locally
 
 ```bash
-docker build -t devsecops-demo-app:latest .
-docker run -d --name test-app -p 5000:5000 devsecops-demo-app:latest
+docker build -t fintech-security-lab:latest .
+docker run -d --name test-app -p 5000:5000 fintech-security-lab:latest
 ```
