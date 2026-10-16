@@ -379,7 +379,6 @@ jobs:
           docker stop test-flask-app || true
           docker rm test-flask-app   || true
 
-
   deploy_production:
     name: Deploy to Production
     runs-on: ubuntu-latest
