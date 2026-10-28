@@ -338,7 +338,7 @@ jobs:
           docker run --net=host \
             -v $(pwd)/zap_rules.tsv:/zap/wrk/zap_rules.tsv:ro \
             -v $(pwd)/zap_out:/zap/wrk/:rw \
-            ghcr.io/zaproxy/zaproxy:zaproxy:2.17.0 zap-full-scan.py \
+            ghcr.io/zaproxy/zaproxy:2.17.0 zap-full-scan.py \
             -t "http://localhost:5000/greet?name=test" \
             -c zap_rules.tsv \
             -r zap_report_flask.html \
@@ -351,7 +351,7 @@ jobs:
           docker run --net=host \
             -v $(pwd)/zap_rules.tsv:/zap/wrk/zap_rules.tsv:ro \
             -v $(pwd)/zap_out:/zap/wrk/:rw \
-            ghcr.io/zaproxy/zaproxy:zaproxy:2.17.0 zap-full-scan.py \
+            ghcr.io/zaproxy/zaproxy:2.17.0 zap-full-scan.py \
             -t "http://localhost:3000/os-cmd/ping?host=127.0.0.1" \
             -c zap_rules.tsv \
             -r zap_report_node.html \
