@@ -1,8 +1,8 @@
 apiVersion: v1 # define the api version of the resource
 kind: ServiceAccount # define the kind of resource, in this case a ServiceAccount
 metadata:
-  name: devsecops-demo-sa # define the name of the service account
+  name: fintech-security-sa # define the name of the service account
   namespace: default # define the namespace in which the service account will be created
   labels:
-    app.kubernetes.io/name: devsecops-demo-app # define the name of the application associated with the service account
+    app.kubernetes.io/name: fintech-security-app # define the name of the application associated with the service account
 automountServiceAccountToken: false # define whether the service account should automatically mount a service account token, which is set to false in this case to enhance security
