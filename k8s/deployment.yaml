@@ -1,28 +1,28 @@
 apiVersion: apps/v1 # define the api version of the resource
 kind: Deployment # define the kind of resource, in this case a Deployment
 metadata:
-  name: devsecops-demo-app # define the name of the deployment to manage the application pods
+  name: fintech-security-app # define the name of the deployment to manage the application pods
   namespace: production # define the namespace in which the deployment will be created
   labels:
-    app: devsecops-demo-app # define the label for the deployment, which can be used for selection and organization
+    app: fintech-security-app # define the label for the deployment, which can be used for selection and organization
 spec:
   replicas: 2 # define the number of replicas for the deployment, which determines how many pods will be created and managed by the deployment
   selector: # define the selector for the deployment, which determines which pods will be managed by the deployment
     matchLabels:
-      app: devsecops-demo-app # define the label selector for the deployment, which matches the label of the pods created by the deployment
+      app: fintech-security-app # define the label selector for the deployment, which matches the label of the pods created by the deployment
   template: # define the template for the pods created by the deployment
     metadata:
       labels:
-        app: devsecops-demo-app # define the label for the pods created by the deployment, which can be used for selection and organization
+        app: fintech-security-app # define the label for the pods created by the deployment, which can be used for selection and organization
     spec:
-      serviceAccountName: devsecops-demo-sa # define the service account to be used by the pods created by the deployment, which provides access to Kubernetes resources and enhances security
+      serviceAccountName: fintech-security-sa # define the service account to be used by the pods created by the deployment, which provides access to Kubernetes resources and enhances security
       securityContext: # define the security context for the pods created by the deployment, which provides security settings for the pods
         runAsNonRoot: true # define whether the pods should run as a non-root user, which is set to true in this case to enhance security
         runAsUser: 10001 #define the user ID to be used by the pods created by the deployment, which is set to 10001 in this case to enhance security
         runAsGroup: 10001
       containers:
-        - name: demo-app # define the name of the container to be created by the deployment, which runs the application
-          image: ghcr.io/oqanxc/devsecops-demo-app:v1.0.0 # define the image to be used by the container, which is pulled from a container registry and contains the application code and dependencies
+        - name: fintech-security-app # define the name of the container to be created by the deployment, which runs the application
+          image: ghcr.io/oqanxc/fintech-security-app:v1.0.0 # define the image to be used by the container, which is pulled from a container registry and contains the application code and dependencies
           imagePullPolicy: IfNotPresent # define the image pull policy for the container, which determines when the image should be pulled from the container registry
           ports:
             - containerPort: 5000 # define the port on which the application is running in the container, which will receive traffic from the service

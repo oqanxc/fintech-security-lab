@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1 # define the api version of the resource
 kind: NetworkPolicy # define the kind of resource, in this case a NetworkPolicy
 metadata: 
-  name: devsecops-demo-netpol # define the name of the network policy to control traffic to and from the application
+  name: fintech-security-netpol # define the name of the network policy to control traffic to and from the application
   namespace: default # define the namespace in which the network policy will be created
   labels: 
-    app.kubernetes.io/name: devsecops-demo-app # define the name of the application associated with the network policy
+    app.kubernetes.io/name: fintech-security-app # define the name of the application associated with the network policy
 spec:
   podSelector: # define the selector for the pods to which the network policy applies
     matchLabels:
-      app: devsecops-demo-app # define the label selector for the pods created by the deployment, which will be affected by the network policy
+      app: fintech-security-app # define the label selector for the pods created by the deployment, which will be affected by the network policy
   policyTypes: # define the types of traffic that the network policy will control
     - Ingress 
     - Egress 
