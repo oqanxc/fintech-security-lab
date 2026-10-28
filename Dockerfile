@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip "setuptools>=78.1.1" wheel && \
     pip install --no-cache-dir --target=/install -r requirements.txt && \
     pip install --no-cache-dir --target=/install --upgrade \
-        "msgpack>=1.2.1" "urllib3>=2.8.0"
+        "msgpack>=1.2.3" "urllib3>=2.8.0"
 
 
 FROM python:3.11-slim-bookworm
