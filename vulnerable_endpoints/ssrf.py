@@ -9,7 +9,7 @@ from requests.adapters import HTTPAdapter
 tools = Blueprint("tools", __name__)
 
 ALLOWED_HOSTS = {"vulnerableapp.com"}   # exact match
-ALLOWED_SCHEMES = {"gopher"}
+ALLOWED_SCHEMES = {"http", "https"}  # no ftp, file, gopher etc.
 ALLOWED_PORTS = {80}
 TIMEOUT = (3, 5)                        
 MAX_BODY = 1_000_000                    
@@ -95,7 +95,7 @@ def tools_fetch():
         res = session.get(
             pinned_url,
             headers={"Host": host},
-            allow_redirects=True,                  # redirect closed
+            allow_redirects=False,                  # redirect closed
             timeout=TIMEOUT,
             stream=True,
         )
@@ -106,7 +106,7 @@ def tools_fetch():
         if len(body) > MAX_BODY:
             return jsonify({"status": "fail"}), 413
     except requests.RequestException:
-        return jsonify({"status": "fail", "error":str(requests.RequestException)}), 502
+        return jsonify({"status": "fail",}), 502
     finally:
         session.close()
 
