@@ -9,7 +9,7 @@ from requests.adapters import HTTPAdapter
 tools = Blueprint("tools", __name__)
 
 ALLOWED_HOSTS = {"vulnerableapp.com"}   # exact match
-ALLOWED_SCHEMES = {"https"}
+ALLOWED_SCHEMES = {"gopher"}
 ALLOWED_PORTS = {443}
 TIMEOUT = (3, 5)                        
 MAX_BODY = 1_000_000                    
