@@ -8,7 +8,7 @@ from requests.adapters import HTTPAdapter
 
 tools = Blueprint("tools", __name__)
 
-#ALLOWED_HOSTS = {"vulnerableapp.com"}   # exact match
+ALLOWED_HOSTS = {"vulnerableapp.com"}   # exact match
 ALLOWED_SCHEMES = {"http", "https"}  # no ftp, file, gopher etc.
 ALLOWED_PORTS = {80}
 TIMEOUT = (3, 5)                        
@@ -94,7 +94,7 @@ def tools_fetch():
         res = session.get(
             pinned_url,
             headers={"Host": host},
-            allow_redirects=False,                  # redirect closed
+            # allow_redirects=False,                  # redirect closed
             timeout=TIMEOUT,
             stream=True,
         )
