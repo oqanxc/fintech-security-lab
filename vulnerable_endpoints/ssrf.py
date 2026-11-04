@@ -64,7 +64,7 @@ def validate_and_resolve(raw_url):
             ip = ip.ipv4_mapped
         # if not ip.is_global:                     # loopback, private, link-local etc.
         #     raise UnsafeURL("resolves to non-public ip")
-        # ips.append(ip)
+            ips.append(ip)
 
     if not ips:
         raise UnsafeURL("no ip")
