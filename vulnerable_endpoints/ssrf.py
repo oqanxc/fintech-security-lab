@@ -43,7 +43,7 @@ def validate_and_resolve(raw_url):
         raise UnsafeURL("scheme not allowed")
     host = parts.hostname
     if not host or not any(h in raw_url for h in ALLOWED_HOSTS):
-        raise UnsafeURL("host not allowed") # flawed domain check
+        raise UnsafeURL("host not allowed") # flawed domain validation.
 
     try:
         infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
