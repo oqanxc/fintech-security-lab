@@ -60,19 +60,7 @@ def validate_and_resolve(raw_url):
     if not ips:
         raise UnsafeURL("no ip")
     return parts, host, port, ips[0]
-
-    ips = []
-    for info in infos:
-        ip = ipaddress.ip_address(info[4][0].split("%")[0])
-        if ip.version == 6 and ip.ipv4_mapped:   # ::ffff:127.0.0.1 check
-            ip = ip.ipv4_mapped
-        # if not ip.is_global:                     # loopback, private, link-local etc.
-        #     raise UnsafeURL("resolves to non-public ip")
-            ips.append(ip)
-
-    # if not ips:
-    #     raise UnsafeURL("no ip")
-    # return parts, host, port, ips[0]
+   
 
 @tools.route("/fetch", methods=["POST"])
 def tools_fetch():
