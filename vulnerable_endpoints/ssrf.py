@@ -95,7 +95,12 @@ def tools_fetch():
     session.mount("https://", PinnedHostAdapter(host))
 
     try:
-        res = requests.get(raw_url, timeout=TIMEOUT, stream=True)
+        res = session.get(
+    pinned_url,
+    headers={"Host": host},
+    timeout=TIMEOUT,
+    stream=True,
+        )
         if res.is_redirect or res.is_permanent_redirect:
             return jsonify({"status": "fail"}), 400
 
