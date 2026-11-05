@@ -8,7 +8,7 @@ from requests.adapters import HTTPAdapter
 
 tools = Blueprint("tools", __name__)
 
-#ALLOWED_HOSTS = {"vulnerableapp.com"}   # exact match
+ALLOWED_HOSTS = {"vulnerableapp.com"}   # exact match
 ALLOWED_SCHEMES = {"http", "https"}  # no ftp, file, gopher etc.
 ALLOWED_PORTS = {80}
 TIMEOUT = (3, 5)                        
@@ -32,26 +32,19 @@ class PinnedHostAdapter(HTTPAdapter):
         super().init_poolmanager(connections, maxsize, block=block, **pool_kwargs)
 
 
-# def validate_and_resolve(raw_url):
-#     #  Parse, do not search within the string
-#     try:
-#         parts = urlsplit(raw_url)
-#         port = parts.port or 443
-#     except ValueError:
-#         raise UnsafeURL("invalid url")
+def validate_and_resolve(raw_url):
+    try:
+        parts = urlsplit(raw_url)
+        port = parts.port or 80
+    except ValueError:
+        raise UnsafeURL("invalid url")
 
-#     #   Schema, userinfo, host, port checks
-#     if parts.scheme not in ALLOWED_SCHEMES:
-#         raise UnsafeURL("scheme not allowed")
-#     if parts.username or parts.password:
-#         raise UnsafeURL("userinfo not allowed")
-#     host = parts.hostname
-#     if host not in ALLOWED_HOSTS:           # not containing, exact match
-#         raise UnsafeURL("host not allowed")
-#     if port not in ALLOWED_PORTS:
-#         raise UnsafeURL("port not allowed")
+    if parts.scheme not in ALLOWED_SCHEMES:
+        raise UnsafeURL("scheme not allowed")
+    host = parts.hostname
+    if not host or not any(h in raw_url for h in ALLOWED_HOSTS):
+        raise UnsafeURL("host not allowed") # flawed domain validation.
 
-    #  resolve it and check all IPs
     try:
         infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
     except socket.gaierror:
@@ -60,15 +53,14 @@ class PinnedHostAdapter(HTTPAdapter):
     ips = []
     for info in infos:
         ip = ipaddress.ip_address(info[4][0].split("%")[0])
-        if ip.version == 6 and ip.ipv4_mapped:   # ::ffff:127.0.0.1 check
+        if ip.version == 6 and ip.ipv4_mapped:
             ip = ip.ipv4_mapped
-        # if not ip.is_global:                     # loopback, private, link-local etc.
-        #     raise UnsafeURL("resolves to non-public ip")
-            ips.append(ip)
+        ips.append(ip)
 
-    # if not ips:
-    #     raise UnsafeURL("no ip")
-    # return parts, host, port, ips[0]
+    if not ips:
+        raise UnsafeURL("no ip")
+    return parts, host, port, ips[0]
+   
 
 @tools.route("/fetch", methods=["POST"])
 def tools_fetch():
@@ -92,11 +84,10 @@ def tools_fetch():
 
     try:
         res = session.get(
-            pinned_url,
-            headers={"Host": host},
-            allow_redirects=False,                  # redirect closed
-            timeout=TIMEOUT,
-            stream=True,
+    pinned_url,
+    headers={"Host": host},
+    timeout=TIMEOUT,
+    stream=True,
         )
         if res.is_redirect or res.is_permanent_redirect:
             return jsonify({"status": "fail"}), 400

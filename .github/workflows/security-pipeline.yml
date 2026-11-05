@@ -98,7 +98,7 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          queries: security-extended,security-and-quality
+          queries: security-extended
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
@@ -108,11 +108,11 @@ jobs:
 
       - name: CodeQL Gate
         run: |
-          count=$(jq '[.runs[].results[]? | select(.level=="error")] | length' sarif-results/*.sarif)
-          echo "CodeQL error-level findings: $count"
+          count=$(jq '[.runs[].results[]?] | length' sarif-results/*.sarif)
+          echo "CodeQL findings: $count"
           if [ "$count" -gt 0 ]; then
-            jq -r '.runs[].results[]? | select(.level=="error") | "\(.ruleId)  \(.locations[0].physicalLocation.artifactLocation.uri):\(.locations[0].physicalLocation.region.startLine)"' sarif-results/*.sarif
-            echo "::error:: CodeQL found $count error-level findings. Failing the job."
+            jq -r '.runs[].results[]? | "\(.ruleId)  \(.locations[0].physicalLocation.artifactLocation.uri):\(.locations[0].physicalLocation.region.startLine)"' sarif-results/*.sarif
+            echo "::error::CodeQL found $count findings. Failing the job."
             exit 1
           fi
 
