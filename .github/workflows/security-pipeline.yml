@@ -31,7 +31,12 @@ jobs:
           pip install semgrep
           
           echo "=== Running Semgrep and Generating SARIF ==="
-          semgrep scan --config=auto --sarif --output=semgrep.sarif --error --severity --verbose ERROR
+          semgrep scan \
+          --config=auto \
+          --sarif \
+          --output=semgrep.sarif \
+          --error \
+          --verbose
 
       - name: Upload Semgrep SARIF to GitHub Security
         if: always() && hashFiles('semgrep.sarif') != ''
