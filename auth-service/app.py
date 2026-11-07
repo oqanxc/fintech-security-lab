@@ -1,11 +1,17 @@
 import datetime # timestamp
 import jwt # JSON Web Token (JWT) library for encoding and decoding tokens
 from flask import Flask, jsonify, request
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
 # Secret key for JWT encoding and decoding. In a production environment, this should be stored securely and not hardcoded.
-SECRET_KEY = "secret-key"
+
+
+load_dotenv()
+
+SECRET_KEY = os.environ["JWT_SECRET_KEY"]
 
 
 @app.route("/api/v1/login", methods=["POST"]) #defining the login route for the authentication service. It accepts POST requests at the specified endpoint.
