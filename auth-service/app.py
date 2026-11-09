@@ -11,6 +11,8 @@ app = Flask(__name__)
 load_dotenv()
 
 SECRET_KEY = os.environ["JWT_SECRET_KEY"]
+AUTH_USERNAME = os.environ["AUTH_USERNAME"]
+AUTH_PASSWORD = os.environ["AUTH_PASSWORD"]
 
 
 @app.route("/api/v1/login", methods=["POST"]) #defining the login route for the authentication service. It accepts POST requests at the specified endpoint.
@@ -26,7 +28,7 @@ def login():
   password = data.get("password")
 
   # Check if the provided username and password match the expected values.
-  if username == "okan" and password == "secure_password":
+  if username == AUTH_USERNAME and password == AUTH_PASSWORD:
     payload = {
         "sub": username,
         "role": "fintech_user",
