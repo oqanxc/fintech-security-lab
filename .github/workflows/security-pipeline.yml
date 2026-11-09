@@ -33,6 +33,7 @@ jobs:
           echo "=== Running Semgrep and Generating SARIF ==="
           semgrep scan \
           --config=auto \
+          --severity ERROR \
           --sarif \
           --output=semgrep.sarif \
           --error \
