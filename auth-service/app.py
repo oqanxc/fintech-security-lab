@@ -42,4 +42,4 @@ def login():
 
 
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=5001) # nosec B104
+  app.run(host="127.0.0.1", port=5001) # The application is set to run on localhost for temporary testing purposes. In a production environment, typically deploy the application to a server and configure it to listen on an appropriate host and port.
