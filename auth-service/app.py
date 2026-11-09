@@ -30,10 +30,11 @@ def login():
   # Check if the provided username and password match the expected values.
   if username == AUTH_USERNAME and password == AUTH_PASSWORD:
     payload = {
-        "sub": username,
-        "role": "fintech_user",
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
-    }
+    "sub": username,
+    "role": "fintech_user",
+    "exp": datetime.datetime.now(datetime.timezone.utc)
+          + datetime.timedelta(hours=1),
+}
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return jsonify({"status": "success", "token": token})
 
