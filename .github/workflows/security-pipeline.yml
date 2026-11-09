@@ -13,7 +13,6 @@ permissions:
   packages: write
 
 jobs:
-
   sast_Semgrep:
     name: SAST (Semgrep)
     runs-on: ubuntu-latest
