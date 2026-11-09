@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 # Secret key for JWT encoding and decoding. In a production environment, this should be stored securely and not hardcoded.
 
-
 load_dotenv()
 
 SECRET_KEY = os.environ["JWT_SECRET_KEY"]
