@@ -9,6 +9,8 @@ from vulnerable_endpoints.crlf_injection import crlf_bp
 app.register_blueprint(crlf_bp)
 from vulnerable_endpoints.xss import xss_bp
 app.register_blueprint(xss_bp)
+from vulnerable_endpoints.ssrf import tools
+app.register_blueprint(tools)
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default_safe_dev_key")
 DATABASE = "test.db"
