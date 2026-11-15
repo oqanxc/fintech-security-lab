@@ -353,6 +353,7 @@ jobs:
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
+          curl -I "http://localhost:5001/api/v1/login"
 
       
       - name: Prepare ZAP Output Dir

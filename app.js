@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Include router module (Blueprint)
 const osCommandRouter = require('./vulnerable_endpoints/os_command_injection');
