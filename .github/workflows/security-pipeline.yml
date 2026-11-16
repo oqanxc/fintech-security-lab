@@ -350,6 +350,8 @@ jobs:
           npm install express
           npm ls body-parser ip-address
           npm audit
+          npm install ip-address@10.7.6
+          npm install body-parser@2.4.0
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
