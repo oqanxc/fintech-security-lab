@@ -350,6 +350,7 @@ jobs:
           npm install express
           npm ls body-parser ip-address
           npm audit
+          npm audit fix --dry-run
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
