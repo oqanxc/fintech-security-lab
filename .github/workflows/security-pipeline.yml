@@ -345,7 +345,7 @@ jobs:
           docker run -d --name test-flask-app -p 5000:5000 $IMAGE
           sleep 5
    # Check if both apps are running   
-     - name: Install & Update Node.js Dependencies
+      - name: Install & Update Node.js Dependencies
         run: |
           npm install express
           npm install ip-address@10.7.6
