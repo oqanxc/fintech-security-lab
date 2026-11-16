@@ -349,7 +349,8 @@ jobs:
         run: |
           npm install express
           node app.js &
-          sleep 5 
+          sleep 5
+          npm audit 
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
