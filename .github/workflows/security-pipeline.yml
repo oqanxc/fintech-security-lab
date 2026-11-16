@@ -351,7 +351,7 @@ jobs:
           node app.js &
           sleep 5
           npm audit 
-          npm audit fix
+          npm audit fix --force
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
