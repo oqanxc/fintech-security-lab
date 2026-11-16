@@ -345,17 +345,23 @@ jobs:
           docker run -d --name test-flask-app -p 5000:5000 $IMAGE
           sleep 5
    # Check if both apps are running   
-      - name: Install & Run Node.js App
+     - name: Install & Update Node.js Dependencies
         run: |
           npm install express
-          npm ls body-parser ip-address
-          npm audit
           npm install ip-address@10.7.6
           npm install body-parser@2.4.0
+
+          npm ls body-parser ip-address
+          npm audit
+
+      - name: Install & Run Node.js App
+        run: |
+          node app.js &
+          sleep 5
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
-          curl -I "http://localhost:5001/api/v1/login"
+          
 
       
       - name: Prepare ZAP Output Dir
