@@ -348,11 +348,8 @@ jobs:
       - name: Install & Run Node.js App
         run: |
           npm install express
-          node app.js &
-          sleep 5
-          npm audit 
-          npm audit fix --force
-          npm update -g body-parser
+          npm ls body-parser ip-address
+          npm audit
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
