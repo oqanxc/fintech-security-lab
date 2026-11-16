@@ -352,6 +352,7 @@ jobs:
           sleep 5
           npm audit 
           npm audit fix --force
+          npm update -g body-parser
           
           curl -I "http://localhost:5000/greet?name=test"
           curl -I "http://localhost:3000/os-cmd/ping?host=127.0.0.1"
