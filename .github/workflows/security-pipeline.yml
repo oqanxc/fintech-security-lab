@@ -344,6 +344,9 @@ jobs:
           docker pull $IMAGE
           docker run -d --name test-flask-app -p 5000:5000 $IMAGE
           sleep 5
+          docker ps -a
+          docker logs test-flask-app || true
+          sleep 5
    # Check if both apps are running   
       - name: Install & Update Node.js Dependencies
         run: |
