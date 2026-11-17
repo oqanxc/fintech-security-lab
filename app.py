@@ -27,7 +27,7 @@ def init_db():
 def home():
     return jsonify({
         "status": "running",
-        "service": "DevSecOps Demo API",
+        "service": "Fintech Demo API",
         "endpoints": ["/go?url=test", "/search?username=test", "/greet?name=test"]
     })
 
@@ -54,7 +54,7 @@ def get_user():
 if __name__ == "__main__":
     init_db()
     #  0.0.0.0 listening for Docker container compatilibity.
-    app.run(host="127.0.0.1", port=5000)  # nosec B104
+    app.run(host="0.0.0.0", port=5000)  # nosec B104
 
 
 # TEST SECRET - PIPELINE TRUFFLEHOG GATE VERIFICATION
