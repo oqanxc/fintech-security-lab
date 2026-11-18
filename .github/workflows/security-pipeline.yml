@@ -419,15 +419,16 @@ jobs:
       # Last check for vulnerabilities and fail the job if any are found
       - name: Evaluate DAST Security Gate
         run: |
-          for pair in "Flask:$FLASK_RC" "Node:$NODE_RC"; do
-            name=${pair%%:*}
-            rc=${pair##*:}
-            if [ "$rc" = "1" ]; then
-              echo "::error::$name: DAST bulgusu var (ZAP exit 1)"
-              failed=1
-            elif [ "$rc" != "0" ]; then
-              echo "::error::$name: ZAP çalışamadı (exit '$rc'), tarama sonucu yok"
-              failed=1
+          for pair in "API:$API_RC" "Node:$NODE_RC"; do
+          name=${pair%%:*}
+          rc=${pair##*:}
+
+          if [ "$rc" = "1" ]; then
+            echo "::error::$name: DAST bulgusu var (ZAP exit 1)"
+            failed=1
+          elif [ "$rc" != "0" ]; then
+            echo "::error::$name: ZAP çalışamadı veya uyarı verdi (exit '$rc')"
+            failed=1
             fi
           done
           [ -z "$failed" ] || exit 1
