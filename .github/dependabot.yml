@@ -22,3 +22,9 @@ updates:
       interval: "weekly"
     labels:
       - "ci/cd"
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
