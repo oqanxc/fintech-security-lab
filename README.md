@@ -9,7 +9,7 @@ Every gate below was added incrementally, tested in isolation, and debugged agai
 
 ![DevSecOps Pipeline Graph](pipeline-graph.png)
 
-Parallel static gates (SAST, Secrets, SCA, IaC) → DAST fuzzing → Keyless Cosign signing → Auto Staging → Manual Approval for Production.
+Parallel static gates (SAST, Secrets, SCA, IaC) → Keyless Cosign signing → Auto Staging → DAST fuzzing → Manual Approval for Production.
 
 
 Branch protection on `main` requires these checks to pass before merge is even possible — this isn't just a CI pipeline that reports problems, it's a gate that blocks bad code from landing.
@@ -17,6 +17,8 @@ Branch protection on `main` requires these checks to pass before merge is even p
 ## Tools
 
 Bandit: Fast AST-level static analysis for Python, targeting pattern-based insecure function calls and rule violations.
+
+Semgrep: Rule-based, multi-language static analysis that complements Bandit and CodeQL by catching insecure patterns across both the Python and Node.js code.
 
 CodeQL: Deep semantic SAST focused on taint analysis. Tracks unsanitized input flows from sources to vulnerable sinks across interprocedural call graphs.
 
@@ -35,7 +37,7 @@ Cosign (Sigstore): Keyless container signing and signature verification leveragi
 
 ## Deployment gate
 
-Every image that reaches `Deploy to Production` has already: passed all four security gates, been signed with a verifiable, tamper-evident signature, and been deployed to staging. Production still requires a human to click "Approve" in GitHub — a deliberate policy decision, not a technical necessity, reflecting how real financial/regulated systems treat production pushes.
+Every image that reaches **Deploy to Production** has already: passed all static security gates (SAST, SCA, secrets, IaC), been signed with a verifiable, tamper-evident signature, been deployed to staging, and passed DAST fuzzing against the running applications. Production still requires a human to click "Approve" in GitHub — a deliberate policy decision, not a technical necessity, reflecting how real financial/regulated systems treat production pushes.
 
 Note: staging/production deployment steps are currently simulated (no real cluster is connected — GitHub Actions runners can't reach a local machine behind NAT, and no cloud cluster is provisioned for this project). The approval mechanism itself is fully real and functions exactly as it would with a live deployment target.
 
@@ -52,16 +54,17 @@ pre-commit install
 ## Roadmap
 
 **Done**
--  Four independent, parallel security gates (SAST ×2, SCA, DAST, Secrets)
--  Kubernetes manifests (Deployment, Service, NetworkPolicy, RBAC) with security hardening — non-root, read-only filesystem, resource limits, restricted egress
--  `trivy config` scan of Kubernetes manifests as a CI job
--  Keyless container signing (Cosign) + verification
--  SBOM generation (CycloneDX)
--  Staging/production environments with a manual approval gate for production
--  Email notification on pipeline failure
--  Pre-commit hook for local secret scanning (Docker-based Trufflehog)
--  Dependabot for automated dependency updates
-- Real cloud-hosted staging/production clusters to replace the current simulated deploy steps
+- Parallel static security gates (SAST ×3: Bandit, Semgrep, CodeQL; SCA; Secrets; IaC) followed by DAST
+- Kubernetes manifests (Deployment, Service, NetworkPolicy, RBAC) with security hardening — non-root, read-only filesystem, resource limits, restricted egress
+- `trivy config` scan of Kubernetes manifests as a CI job
+- Keyless container signing (Cosign) + verification
+- SBOM generation (CycloneDX)
+- Staging/production environments with a manual approval gate for production
+- Email notification on pipeline failure
+- Pre-commit hook for local secret scanning (Docker-based TruffleHog)
+- Dependabot for automated updates (pip, npm, GitHub Actions, Docker base image)
+- Third-party actions pinned to fixed versions instead of `@main` / `@master`
+- Least-privilege `permissions` on every workflow job
 
 **Planned**
 - Re-architect the demo application into a fintech-style microservice setup (auth service with JWT, payment/transfer endpoint, balance query service, API gateway) to demonstrate security patterns relevant to regulated financial systems (IDOR, token handling, PCI-DSS-adjacent controls)
