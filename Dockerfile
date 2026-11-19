@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bookworm AS builder
+FROM python:3.15-slim-bookworm AS builder
 
 LABEL maintainer="DevSecOps Engineering"
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir --upgrade pip "setuptools>=78.1.1" wheel && \
         "msgpack>=1.2.4" "urllib3>=2.8.0"
 
 
-FROM python:3.11-slim-bookworm
+FROM python:3.15-slim-bookworm
 WORKDIR /app
 
 RUN apt-get update && \
