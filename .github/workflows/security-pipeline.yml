@@ -8,9 +8,7 @@ on:
 
 permissions:
   contents: read
-  security-events: write
-  id-token: write
-  packages: write
+  
 
 jobs:
   sast_Semgrep:
@@ -50,6 +48,9 @@ jobs:
   sast_Bandit:
     name: SAST (Bandit)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
@@ -124,6 +125,8 @@ jobs:
   secret_scan:
     name: Secrets (Trufflehog)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
@@ -138,6 +141,9 @@ jobs:
   k8s_manifest_scan:
     name: K8s IaC Security (Trivy)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
@@ -184,6 +190,10 @@ jobs:
   sca_scan:
     name: SCA (Trivy)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      packages: write
     steps:
       - name: Checkout Code
 
@@ -309,6 +319,8 @@ jobs:
   deploy_staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     needs: sign_image
     environment: staging
     steps:
@@ -321,6 +333,9 @@ jobs:
   dast_scan:
     name: DAST (OWASP ZAP - Multi-Target)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     needs: deploy_staging
     steps:
       - name: Checkout Code
@@ -442,6 +457,8 @@ jobs:
   deploy_production:
     name: Deploy to Production
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     needs: dast_scan
     environment: production
     steps:
