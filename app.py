@@ -40,7 +40,6 @@ def get_user():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
-   
     query = "SELECT id, username FROM users WHERE username = ?"
     
     try:
