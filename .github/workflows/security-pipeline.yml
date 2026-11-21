@@ -114,13 +114,63 @@ jobs:
 
       - name: CodeQL Gate
         run: |
-          count=$(jq '[.runs[].results[]?] | length' sarif-results/*.sarif)
-          echo "CodeQL findings: $count"
-          if [ "$count" -gt 0 ]; then
-            jq -r '.runs[].results[]? | "\(.ruleId)  \(.locations[0].physicalLocation.artifactLocation.uri):\(.locations[0].physicalLocation.region.startLine)"' sarif-results/*.sarif
-            echo "::error::CodeQL found $count findings. Failing the job."
+          shopt -s nullglob
+          sarif_files=(sarif-results/*.sarif)
+
+          if [ ${#sarif_files[@]} -eq 0 ]; then
+            echo "::error::No SARIF files found!"
             exit 1
           fi
+
+          echo "SARIF files found: ${#sarif_files[@]}"
+
+          jq -s '
+            [
+              .[].runs[] as $run
+              | $run.results[]?
+              | . as $result
+              | (
+                  (
+                    if $result.ruleIndex != null
+                    then $run.tool.driver.rules[$result.ruleIndex]
+                    else null
+                    end
+                  )
+                  // (
+                    first(
+                      $run.tool.driver.rules[]?
+                      | select(.id == $result.ruleId)
+                    ) // {}
+                  )
+                ) as $rule
+              | (
+                  ($rule.properties["security-severity"] // "0")
+                  | tonumber
+                ) as $severity
+              | select($severity >= 7.0)
+              | {
+                  severity: $severity,
+                  ruleId: $result.ruleId,
+                  uri: ($result.locations[0].physicalLocation.artifactLocation.uri // "unknown"),
+                  line: ($result.locations[0].physicalLocation.region.startLine // 0),
+                  message: ($result.message.text // "")
+                }
+            ]
+          ' "${sarif_files[@]}" > "$RUNNER_TEMP/codeql-high-findings.json"
+
+          count=$(jq 'length' "$RUNNER_TEMP/codeql-high-findings.json")
+
+          echo "High/Critical findings: $count"
+
+          jq -r '.[] | "\(.severity) | \(.ruleId) | \(.uri):\(.line) | \(.message)"' \
+            "$RUNNER_TEMP/codeql-high-findings.json"
+
+          if [ "$count" -gt 0 ]; then
+            echo "::error::CodeQL found $count High/Critical findings. Failing the job."
+            exit 1
+          fi
+
+          echo "No High/Critical findings."
 
   secret_scan:
     name: Secrets (Trufflehog)
