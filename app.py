@@ -11,6 +11,8 @@ from vulnerable_endpoints.xss import xss_bp
 app.register_blueprint(xss_bp)
 from vulnerable_endpoints.ssrf import tools
 app.register_blueprint(tools)
+from vulnerable_endpoints.ssti import ssti_bp
+app.register_blueprint(ssti_bp)
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default_safe_dev_key")
 DATABASE = "test.db"
@@ -38,7 +40,6 @@ def get_user():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
-   
     query = "SELECT id, username FROM users WHERE username = ?"
     
     try:
