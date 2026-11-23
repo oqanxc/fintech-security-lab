@@ -158,7 +158,6 @@ jobs:
           path: sarif-results/*.sarif
 
 
-      
 
   secret_scan:
     name: Secrets (Trufflehog)
