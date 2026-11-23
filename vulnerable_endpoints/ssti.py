@@ -16,5 +16,5 @@ def vulnerable_ssti():
     </html>
     """
 
-    return render_template_string(template,name=name)
+    return render_template_string(template)
 
