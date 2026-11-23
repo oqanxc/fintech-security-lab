@@ -42,6 +42,14 @@ jobs:
         with:
           sarif_file: 'semgrep.sarif'
           category: 'semgrep-sast'
+          
+      - name: Show Semgrep Findings
+        if: always()
+        run: |
+          jq -r '
+            .runs[].results[] |
+            "Rule: \(.ruleId)\nMessage: \(.message.text)\nFile: \(.locations[0].physicalLocation.artifactLocation.uri)\nLine: \(.locations[0].physicalLocation.region.startLine)\n"
+          ' semgrep.sarif
 
 
 
@@ -171,6 +179,8 @@ jobs:
           fi
 
           echo "No High/Critical findings."
+
+      
 
   secret_scan:
     name: Secrets (Trufflehog)
