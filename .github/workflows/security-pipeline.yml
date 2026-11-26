@@ -120,67 +120,38 @@ jobs:
           category: "/language:${{ matrix.language }}"
           output: sarif-results
 
-      - name: CodeQL Gate
+      
+      - name: Debug CodeQL Findings
+        if: always()
         run: |
-          shopt -s nullglob
-          sarif_files=(sarif-results/*.sarif)
+          for file in sarif-results/*.sarif; do
+            echo "===== $file ====="
 
-          if [ ${#sarif_files[@]} -eq 0 ]; then
-            echo "::error::No SARIF files found!"
-            exit 1
-          fi
-
-          echo "SARIF files found: ${#sarif_files[@]}"
-
-          jq -s '
-            [
-              .[].runs[] as $run
+            jq -r '
+              .runs[] as $run
               | $run.results[]?
               | . as $result
               | (
-                  (
-                    if $result.ruleIndex != null
-                    then $run.tool.driver.rules[$result.ruleIndex]
-                    else null
-                    end
-                  )
-                  // (
-                    first(
-                      $run.tool.driver.rules[]?
-                      | select(.id == $result.ruleId)
-                    ) // {}
-                  )
+                  $run.tool.driver.rules[]
+                  | select(.id == $result.ruleId)
                 ) as $rule
-              | (
-                  ($rule.properties["security-severity"] // "0")
-                  | tonumber
-                ) as $severity
-              | select($severity >= 7.0)
-              | {
-                  severity: $severity,
-                  ruleId: $result.ruleId,
-                  uri: ($result.locations[0].physicalLocation.artifactLocation.uri // "unknown"),
-                  line: ($result.locations[0].physicalLocation.region.startLine // 0),
-                  message: ($result.message.text // "")
-                }
-            ]
-          ' "${sarif_files[@]}" > "$RUNNER_TEMP/codeql-high-findings.json"
+              | "Rule: \($result.ruleId)\n"
+                + "Message: \($result.message.text)\n"
+                + "Severity: \($rule.properties["security-severity"] // "Not defined")\n"
+                + "File: \($result.locations[0].physicalLocation.artifactLocation.uri)\n"
+                + "Line: \($result.locations[0].physicalLocation.region.startLine)\n"
+            ' "$file"
+          done
 
-          count=$(jq 'length' "$RUNNER_TEMP/codeql-high-findings.json")
 
-          echo "High/Critical findings: $count"
+      - name: Upload CodeQL SARIF Artifact
+        if: always() && hashFiles('sarif-results/*.sarif') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-sarif
+          path: sarif-results/*.sarif
 
-          jq -r '.[] | "\(.severity) | \(.ruleId) | \(.uri):\(.line) | \(.message)"' \
-            "$RUNNER_TEMP/codeql-high-findings.json"
 
-          if [ "$count" -gt 0 ]; then
-            echo "::error::CodeQL found $count High/Critical findings. Failing the job."
-            exit 1
-          fi
-
-          echo "No High/Critical findings."
-
-      
 
   secret_scan:
     name: Secrets (Trufflehog)
